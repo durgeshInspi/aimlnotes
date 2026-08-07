@@ -1361,15 +1361,3 @@ Use these 20 classroom questions to test student comprehension:
 
 ### Q30: How do you display a regression fit line in Seaborn?
 **Answer:** Using `sns.regplot()` or `sns.lmplot()`.
-
----
-
-## 24. Summary
-
-In this comprehensive 2-hour classroom module, we covered:
-1. **Foundations:** The core purpose of data visualization and choosing the correct chart type for continuous vs categorical metrics.
-2. **Library Ecosystem:** How NumPy, Pandas, Matplotlib, and Seaborn work together in Python data workflows.
-3. **Matplotlib Core:** Creating Line Plots, Bar Charts, Scatter Plots, Histograms, Pie Charts, and Box Plots with complete code examples.
-4. **Customization & Layouts:** Annotating figures, styling ticks, managing figure sizes, grid lines, legends, saving outputs, and building multi-chart subplot layouts.
-5. **Seaborn Mastery:** Utilizing statistical visualizations (`lineplot`, `barplot`, `scatterplot`, `countplot`, `histplot`, `boxplot`, `heatmap`, `pairplot`) directly on DataFrames like `tips` and `iris`.
-6. **Classroom Preparedness:** Practicing common error resolutions, visualization best practices, classroom practice questions, assignments, and 30 interview questions with answers.
