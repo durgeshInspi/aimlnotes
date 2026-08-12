@@ -8,32 +8,40 @@
    - Why Do We Use Machine Learning?
    - Types of Machine Learning (Supervised, Unsupervised, Semi-Supervised, Reinforcement) with Real Examples
 2. [Module 2: Exploratory Data Analysis (EDA)](#module-2-exploratory-data-analysis-eda)
-   - What is EDA?
-   - Why is EDA Important?
-   - Every Step of EDA (Step-by-Step Pipeline with Python Code)
+   - What is EDA & Why is it Important?
+   - Step 1: Viewing the Data (`.head()`, `.tail()`, `.sample()`, `.info()`, `.shape`)
+   - Step 2: Summary Statistics (`.describe()`, Central Tendency & Dispersion)
+   - Step 3: Value Counts & Frequency Distribution (`.value_counts()`)
+   - Step 4: Missing Values Identification & Visualization
+   - Step 5: Data Visualization (Histograms, Boxplots, Bar Plots, Correlation, Heatmaps)
+   - Step 6: Target Variable Exploration (Regression vs Classification)
 3. [Module 3: Data Cleaning](#module-3-data-cleaning)
    - What is Data Cleaning?
-   - Handling Missing Values
-   - Handling Duplicate Data
-   - Outlier Detection & Treatment
-   - Handling Inconsistent & Corrupted Data
+   - Step 1: Handling Missing Values & Strategies (MCAR/MAR/MNAR, Drop, Mean/Median/Mode, KNN)
+   - Step 2: Removing Duplicates (`.duplicated()`, `.drop_duplicates()`)
+   - Step 3: Fixing Data Types (`.astype()`, `pd.to_numeric()`, `pd.to_datetime()`)
+   - Step 4: Handling Inconsistent Categories & Typos (`.str.strip()`, `.str.lower()`, `.replace()`)
+   - Step 5: Detecting & Handling Outliers (IQR Method, Z-Score Method, Capping, Trimming)
+   - Step 6: Fixing Logic or Domain Errors (Invalid values, Logical date ordering, Range violations)
 4. [Module 4: Data Preprocessing](#module-4-data-preprocessing)
    - What is Data Preprocessing?
-   - Feature Scaling & Normalization (StandardScaler, MinMaxScaler, RobustScaler)
-   - Encoding Categorical Data (One-Hot, Ordinal, Label Encoding)
-   - Train-Test Split & Preventing Data Leakage
+   - Step 1: Encoding Categorical Variables (One-Hot, Ordinal, Label, Target Encoding)
+   - Step 2: Feature Transformation (Log, Square Root, Box-Cox, Yeo-Johnson)
+   - Step 3: Feature Scaling & Normalization (StandardScaler, MinMaxScaler, RobustScaler, MaxAbsScaler)
+   - Step 4: Train-Test Split & Preventing Data Leakage
 5. [Module 5: Feature Engineering](#module-5-feature-engineering)
    - What is Feature Engineering?
-   - Why Feature Engineering is Essential?
-   - Feature Transformations (Log, Power, Polynomial)
-   - Feature Creation & Domain Knowledge Extraction
-   - Feature Binning / Discretization
+   - Datetime Feature Extraction & Cyclical Sine/Cosine Encoding
+   - Domain Ratios & Combinations
+   - Text Feature Extraction (Length, Word Count, Character Count)
+   - Feature Discretization / Binning (`pd.cut`, `pd.qcut`)
+   - Group Aggregations (`groupby().transform()`)
 6. [Module 6: Feature Selection](#module-6-feature-selection)
    - What is Feature Selection?
-   - Why Feature Selection is Important?
-   - Filter Methods (Variance, Correlation, Chi-Square, ANOVA, Mutual Info)
-   - Wrapper Methods (Forward Selection, Backward Elimination, RFE)
-   - Embedded Methods (Lasso L1 Regularization, Tree Importance)
+   - Filter Methods (Variance Threshold, Correlation Matrix & VIF, Chi-Square, ANOVA, Mutual Info)
+   - Wrapper Methods (Forward Selection, Backward Elimination, RFE / RFECV)
+   - Embedded Methods (Lasso L1 Regularization, Tree Importance, Permutation Importance)
+   - Feature Selection Decision Matrix & Summary Checklist for Students
 
 ---
 
@@ -132,9 +140,9 @@ Supervised Learning is divided into **two categories**:
 The target output is a continuous numerical value (e.g., price, temperature, age, income).
 
 - **Real-World Examples**:
-  - **House Price Prediction**: Inputs: area (sq ft), bedrooms, location $\longrightarrow$ Target: Price ($ \$350,000 $).
+  - **House Price Prediction**: Inputs: area (sq ft), bedrooms, location $\longrightarrow$ Target: Price ($\$350,000$).
   - **Stock Market Price Forecasting**: Inputs: past trend, volume, interest rate $\longrightarrow$ Target: Tomorrow's stock price.
-  - **Salary Prediction**: Inputs: years of experience, education level $\longrightarrow$ Target: Salary ($ \$85,000 $).
+  - **Salary Prediction**: Inputs: years of experience, education level $\longrightarrow$ Target: Salary ($\$85,000$).
 
 #### 2. Classification (Predicting Categories / Labels)
 The target output is a discrete category or class label.
@@ -233,199 +241,253 @@ In **Reinforcement Learning**, an **Agent** learns how to behave in an **Environ
 
 ## 2.1 What is Exploratory Data Analysis (EDA)?
 
-**Exploratory Data Analysis (EDA)** is the critical initial process of performing investigations on data to summarize main characteristics, uncover underlying structures, detect anomalies/outliers, test hypotheses, and check mathematical assumptions using summary statistics and graphical visualizations.
+**Exploratory Data Analysis (EDA)** is the crucial first phase in data science and machine learning where we inspect, clean, summarize, and visualize a dataset to understand its underlying structure, distributions, anomalies, patterns, and relationships **before** building ML models.
 
-> **Analogy**: EDA is like a detective inspecting a crime scene or a doctor examining a patient before diagnosing or writing a prescription!
-
----
-
-## 2.2 Why is EDA Important?
-
-1. **Gives Understanding of Raw Data**: Helps understand what features exist, their formats, and how they relate.
-2. **Spots Errors & Missing Values**: Prevents "Garbage In, Garbage Out" in Machine Learning algorithms.
-3. **Identifies Outliers**: Detects extreme values that could distort ML model predictions.
-4. **Reveals Relationships & Patterns**: Uncovers correlation between independent variables and target variables.
-5. **Guides Feature Selection & Model Choice**: Helps decide whether to use linear models, tree-based models, or neural networks based on data distributions.
+> **Analogy**: EDA is like a doctor conducting diagnostic tests (blood tests, X-rays, stethoscope checks) on a patient before writing a prescription. Building a model without EDA is like prescribing medicine blindly!
 
 ---
 
-## 2.3 Every Step of EDA (Step-by-Step Pipeline with Python Code)
+## 2.2 The 6 Essential Steps of EDA (Step-by-Step Pipeline)
 
-A complete professional EDA workflow consists of **6 systematic steps**:
+A complete professional EDA workflow follows **6 systematic steps**:
 
 ```
-Step 1: Data Understanding & Profiling
-   |
-Step 2: Missing Value Identification
-   |
-Step 3: Univariate Analysis (Single Feature)
-   |
-Step 4: Bivariate & Multivariate Analysis (Multiple Features)
-   |
-Step 5: Outlier Detection & Analysis
-   |
-Step 6: Skewness & Distribution Assessment
+Step 1: Viewing the Data (.head, .tail, .sample, .shape, .info)
+   │
+Step 2: Summary Statistics (.describe, Mean, Median, Std, IQR)
+   │
+Step 3: Value Counts & Frequencies (.value_counts, .nunique)
+   │
+Step 4: Missing Values Identification & Pattern Analysis
+   │
+Step 5: Data Visualization (Histogram, Boxplot, Bar, Heatmap)
+   │
+Step 6: Target Variable Exploration (Regression vs Classification)
 ```
 
 ---
 
-### Step 1: Data Understanding & Profiling
+### Step 1: Viewing the Data
 
-Inspect data shape, column names, data types, and initial rows.
+The very first action is to load the dataset and perform a quick structural inspection to answer:
+- How many rows (records) and columns (features) exist?
+- What are the column names and data types?
+- What does the raw data actually look like?
 
 ```python
 import pandas as pd
 import numpy as np
 
-# Load Sample Dataset
-df = pd.read_csv("student_data.csv")
+# Load dataset
+df = pd.read_csv("housing_data.csv")
 
 # 1. View first 5 rows
+print("--- First 5 Rows ---")
 print(df.head())
 
-# 2. Check total rows and columns
-print("Data Shape (Rows, Cols):", df.shape)
+# 2. View last 5 rows
+print("--- Last 5 Rows ---")
+print(df.tail())
 
-# 3. Check Data Types & Memory Usage
+# 3. View 5 random sample rows (helps spot anomalies across rows)
+print("--- Random 5 Sample Rows ---")
+print(df.sample(5))
+
+# 4. Check Dataset Dimensions (Rows, Columns)
+print("Shape of Dataset (Rows, Cols):", df.shape)
+
+# 5. Check Column Names, Non-Null Counts, and Data Types
+print("--- Dataset Info ---")
 print(df.info())
-
-# 4. Statistical Summary of Numerical Columns
-print(df.describe())
-
-# 5. Statistical Summary of Categorical Columns
-print(df.describe(include='object'))
 ```
 
 ---
 
-### Step 2: Missing Value Identification
+### Step 2: Summary Statistics
 
-Check which columns contain missing (`NaN` / `null`) values.
+Summary statistics give a mathematical overview of the distribution, center, spread, and range of your features.
+
+#### Numerical Summary (`df.describe()`)
+Computes central tendency and dispersion metrics for continuous features:
+- **Count**: Number of non-missing observations.
+- **Mean ($\mu$)**: The arithmetic average.
+- **Std ($\sigma$)**: Standard deviation (how spread out numbers are from the mean).
+- **Min / Max**: Minimum and maximum observed values.
+- **25% ($Q_1$)**: First quartile (25% of data falls below this value).
+- **50% ($Q_2$ / Median)**: Median (middle value dividing data 50/50).
+- **75% ($Q_3$)**: Third quartile (75% of data falls below this value).
+
+```python
+# Statistical summary for numerical columns
+print("--- Numerical Summary ---")
+print(df.describe())
+
+# Statistical summary for categorical columns
+print("--- Categorical Summary ---")
+print(df.describe(include='object'))
+```
+
+> 💡 **Student Tip - Mean vs Median**:
+> - If **Mean $\approx$ Median**, the feature follows a symmetric, bell-shaped (Normal) distribution.
+> - If **Mean > Median**, the feature is **Right-Skewed** (has extreme large values/outliers).
+> - If **Mean < Median**, the feature is **Left-Skewed** (has extreme small values/outliers).
+
+---
+
+### Step 3: Value Counts & Frequency Distribution
+
+For categorical features (e.g., `City`, `Education_Level`, `Payment_Method`), we must check how many records fall into each unique category.
+
+```python
+# 1. Count unique values per categorical column
+print("Unique count per column:")
+print(df.nunique())
+
+# 2. Detailed value counts for a single categorical variable
+print("--- Category Frequencies ---")
+print(df['Education_Level'].value_counts())
+
+# 3. Percentage frequency distribution (Normalized)
+print("--- Category Percentages (%) ---")
+print(df['Education_Level'].value_counts(normalize=True) * 100)
+```
+
+---
+
+### Step 4: Missing Values Identification
+
+Missing values (`NaN`, `None`, `null`) cause errors in ML algorithms if left untreated. We must check which columns contain missing data and how severe the missingness is.
 
 ```python
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-# Check missing count and percentage per column
+# 1. Calculate total missing values per column
 missing_count = df.isnull().sum()
+
+# 2. Calculate percentage of missing values per column
 missing_percent = (df.isnull().sum() / len(df)) * 100
 
+# Combine into a clean summary table
 missing_df = pd.DataFrame({
     'Missing Count': missing_count,
     'Percentage (%)': missing_percent
 })
 
+# Display columns that have missing values
+print("--- Columns with Missing Values ---")
 print(missing_df[missing_df['Missing Count'] > 0])
 
-# Visualize Missing Values using Heatmap
+# 3. Visualize Missing Data using Seaborn Heatmap
 plt.figure(figsize=(10, 5))
-sns.heatmap(df.isnull(), cbar=False, cmap='viridis')
-plt.title("Missing Values Heatmap")
+sns.heatmap(df.isnull(), cbar=False, cmap='viridis', yticklabels=False)
+plt.title("Missing Values Pattern Heatmap (Yellow = Missing)")
+plt.xlabel("Columns")
 plt.show()
 ```
 
 ---
 
-### Step 3: Univariate Analysis (Analyzing One Feature at a Time)
+### Step 5: Data Visualization
 
-Univariate analysis inspects each feature individually to understand its distribution, frequency, and central tendency.
+Visualizations make data distributions, relationships, and anomalies instantly apparent to humans.
 
-#### A. Numerical Variables (Histogram, KDE Plot, Box Plot)
+#### A. Histogram (Analyzing Single Numerical Distribution & Skewness)
+Histograms group continuous numbers into intervals (bins) to show distribution shape.
+
 ```python
-# Distribution of Age feature
-plt.figure(figsize=(12, 4))
+plt.figure(figsize=(8, 4))
+sns.histplot(df['Income'], kde=True, bins=30, color='royalblue')
+plt.title("Income Distribution (Histogram + KDE Curve)")
+plt.xlabel("Income ($)")
+plt.ylabel("Frequency")
+plt.show()
+```
+
+#### B. Boxplot (Detecting Spread & Outliers)
+Boxplots visually display the 5-number summary ($Min, Q_1, Median, Q_3, Max$) and mark outliers as individual points outside the whiskers.
+
+```
+       Outlier
+          *
+  |-------+-----------+-------|
+ Min     Q1  Median  Q3      Max
+```
+
+```python
+plt.figure(figsize=(6, 4))
+sns.boxplot(y=df['Salary'], color='coral')
+plt.title("Salary Boxplot (Identify Outliers & Spread)")
+plt.ylabel("Salary")
+plt.show()
+```
+
+#### C. Bar Plot (Comparing Categorical Frequencies)
+Bar charts display discrete categories alongside their counts or mean target values.
+
+```python
+plt.figure(figsize=(8, 4))
+sns.countplot(x='Department', data=df, palette='Set2')
+plt.title("Employee Count by Department")
+plt.xlabel("Department")
+plt.ylabel("Count")
+plt.xticks(rotation=45)
+plt.show()
+```
+
+#### D. Correlation Matrix & Heatmap (Bivariate / Multivariate Analysis)
+Correlation measures the strength and direction of linear relationship between two numerical variables. Pearson correlation coefficient ($r$) ranges from **-1.0 to +1.0**:
+- **+1.0**: Perfect Positive Linear Correlation (As $X$ increases, $Y$ increases).
+- **0.0**: No Linear Relationship.
+- **-1.0**: Perfect Negative Linear Correlation (As $X$ increases, $Y$ decreases).
+
+```python
+plt.figure(figsize=(10, 8))
+correlation_matrix = df.corr(numeric_only=True)
+
+sns.heatmap(correlation_matrix, annot=True, fmt=".2f", cmap='coolwarm', vmin=-1, vmax=1)
+plt.title("Correlation Matrix Heatmap")
+plt.show()
+```
+
+---
+
+### Step 6: Target Variable Exploration
+
+The **Target Variable ($y$)** is the column your ML model tries to predict. You must analyze it differently based on your problem type:
+
+#### A. Regression Target (Continuous Number e.g., `House_Price`)
+- Inspect target distribution for skewness using Histogram & KDE.
+- Check if target requires log transformation for linear models.
+
+```python
+plt.figure(figsize=(10, 4))
 
 plt.subplot(1, 2, 1)
-sns.histplot(df['Age'], kde=True, color='skyblue')
-plt.title("Age Distribution (Histogram + KDE)")
+sns.histplot(df['House_Price'], kde=True, color='purple')
+plt.title("Raw Target Distribution (Right-Skewed)")
 
 plt.subplot(1, 2, 2)
-sns.boxplot(y=df['Age'], color='lightgreen')
-plt.title("Age Boxplot (Check Spread)")
+sns.histplot(np.log1p(df['House_Price']), kde=True, color='green')
+plt.title("Log-Transformed Target (Normal Curve)")
 
+plt.tight_layout()
 plt.show()
 ```
 
-#### B. Categorical Variables (Count Plot, Bar Chart)
+#### B. Classification Target (Categorical Label e.g., `Churn` or `Fraud`)
+- Check for **Class Imbalance** (e.g., 95% Non-Fraud vs 5% Fraud).
+- Highly imbalanced targets require specialized techniques like SMOTE or class weighting!
+
 ```python
-# Distribution of Gender or Education Level
-plt.figure(figsize=(6, 4))
-sns.countplot(x='Gender', data=df, palette='Set2')
-plt.title("Gender Frequency Distribution")
-plt.show()
-```
-
----
-
-### Step 4: Bivariate & Multivariate Analysis (Analyzing Relationships Between Features)
-
-Bivariate analysis explores how two features interact (e.g., Feature vs Target).
-
-#### A. Numerical vs Numerical (Scatter Plot, Correlation Heatmap)
-```python
-# Scatter Plot: Study Hours vs Exam Score
-plt.figure(figsize=(6, 4))
-sns.scatterplot(x='Study_Hours', y='Exam_Score', data=df, hue='Passed')
-plt.title("Study Hours vs Exam Score")
+plt.figure(figsize=(5, 4))
+sns.countplot(x='Is_Fraud', data=df, palette='dark')
+plt.title("Target Class Balance Check")
 plt.show()
 
-# Correlation Matrix Heatmap
-plt.figure(figsize=(8, 6))
-correlation_matrix = df.corr(numeric_only=True)
-sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f")
-plt.title("Correlation Matrix")
-plt.show()
+# Calculate proportions
+print(df['Is_Fraud'].value_counts(normalize=True) * 100)
 ```
-
-#### B. Categorical vs Numerical (Grouped Boxplot, Groupby Aggregation)
-```python
-# Exam Score by Education Level
-plt.figure(figsize=(8, 5))
-sns.boxplot(x='Education_Level', y='Exam_Score', data=df)
-plt.title("Exam Score Across Education Levels")
-plt.show()
-
-# Groupby Aggregation
-print(df.groupby('Gender')['Exam_Score'].mean())
-```
-
----
-
-### Step 5: Outlier Detection & Analysis
-
-Outliers are extreme values that deviate significantly from the rest of the observations.
-
-#### A. Detecting Outliers using Boxplots & IQR Method
-$$\text{IQR} = Q3 - Q1$$
-$$\text{Lower Bound} = Q1 - 1.5 \times \text{IQR}$$
-$$\text{Upper Bound} = Q3 + 1.5 \times \text{IQR}$$
-
-```python
-Q1 = df['Salary'].quantile(0.25)
-Q3 = df['Salary'].quantile(0.75)
-IQR = Q3 - Q1
-
-lower_bound = Q1 - 1.5 * IQR
-upper_bound = Q3 + 1.5 * IQR
-
-outliers = df[(df['Salary'] < lower_bound) | (df['Salary'] > upper_bound)]
-print(f"Total Outliers Detected: {len(outliers)}")
-```
-
----
-
-### Step 6: Skewness & Distribution Assessment
-
-Skewness measures symmetry in data distribution.
-
-```python
-# Check Skewness score for numerical features
-skewness = df.skew(numeric_only=True)
-print(skewness)
-```
-- **Skewness = 0**: Perfect normal (Gaussian) distribution (Bell curve).
-- **Positive Skewness (> 0.5)**: Tail extends to the right (e.g., Income data).
-- **Negative Skewness (< -0.5)**: Tail extends to the left (e.g., Age of retirement).
 
 ---
 ---
@@ -434,29 +496,49 @@ print(skewness)
 
 ## 3.1 What is Data Cleaning?
 
-**Data Cleaning** (also known as Data Cleansing or Data Wrangling) is the process of detecting and correcting (or removing) corrupt, inaccurate, incomplete, improperly formatted, or duplicate records from a raw dataset.
+**Data Cleaning** is the systematic process of fixing, correcting, or removing incomplete, duplicate, incorrectly formatted, corrupted, or outlier data within a raw dataset.
 
-> **Rule of Thumb**: Data Cleaning deals with **fixing incorrect or missing data**, whereas Data Preprocessing deals with **preparing valid data for ML algorithms**.
+> **Crucial Difference for Students**:
+> - **Data Cleaning**: Fixes **errors, missingness, and inconsistencies** in raw data (e.g., dropping duplicates, fixing typos, handling nulls).
+> - **Data Preprocessing**: Transforms **valid clean data** into numerical/scaled formats ready for ML algorithms (e.g., scaling ranges, one-hot encoding).
 
 ---
 
-## 3.2 Handling Missing Values
-
-Missing values occur due to data corruption, unrecorded responses, or system faults.
-
-### Types of Missing Data:
-1. **MCAR (Missing Completely at Random)**: Missingness has no pattern or relation to any variable.
-2. **MAR (Missing at Random)**: Missingness depends on observed features (e.g., women tend not to answer weight questions).
-3. **MNAR (Missing Not at Random)**: Missingness depends on unobserved values (e.g., people with low income skip reporting income).
-
-### Handling Strategies:
+## 3.2 The 6 Core Data Cleaning Steps
 
 ```
-                          +------------------------+
-                          | Handling Missing Data  |
-                          +-----------+------------+
-                                      |
-                 +--------------------+--------------------+
+Step 1: Handling Missing Values & Strategies
+   │
+Step 2: Removing Duplicates
+   │
+Step 3: Fixing Data Types
+   │
+Step 4: Handling Inconsistent Categories & Typos
+   │
+Step 5: Detecting and Handling Outliers
+   │
+Step 6: Fixing Logic or Domain Errors
+```
+
+---
+
+### Step 1: Handling Missing Values & Strategies
+
+Missing data occurs when no value is stored for a feature in an observation.
+
+#### Types of Missing Data Mechanics:
+1. **MCAR (Missing Completely at Random)**: Missingness is purely random (e.g., survey page got lost in mail).
+2. **MAR (Missing at Random)**: Missingness depends on observed data (e.g., younger people skip answering income).
+3. **MNAR (Missing Not at Random)**: Missingness depends on the missing value itself (e.g., people with extremely high debt intentionally omit debt amount).
+
+#### Strategies to Handle Missing Data:
+
+```
+                           +------------------------+
+                           | Handling Missing Data  |
+                           +-----------+------------+
+                                       |
+                 +---------------------+--------------------+
                  |                                         |
         +--------v-------+                        +--------v-------+
         |  Deletion      |                        |  Imputation    |
@@ -464,107 +546,180 @@ Missing values occur due to data corruption, unrecorded responses, or system fau
         +----------------+                        +----------------+
 ```
 
-#### Strategy 1: Dropping Missing Values (`dropna`)
-*Use when*: Missing data is less than 5% of total dataset, or a column has >50% missing values.
+##### Strategy A: Deletion (`dropna`)
+- **Row Deletion**: Drop rows with missing values if missing rows are <5% of total dataset.
+- **Column Deletion**: Drop an entire column if >50% of its values are missing.
 
 ```python
-# Drop rows where any column has missing value
-df_clean = df.dropna()
+# Drop rows where target column 'Exam_Score' is missing
+df_clean = df.dropna(subset=['Exam_Score'])
 
-# Drop column if more than 50% values are missing
-df_clean = df.drop(columns=['Unnecessary_Column'])
+# Drop column if >50% values are missing
+threshold = len(df) * 0.5
+df_clean = df.dropna(thresh=threshold, axis=1)
 ```
 
-#### Strategy 2: Statistical Imputation (Mean / Median / Mode)
-- **Mean Imputation**: Use for numerical columns with **Normal Distribution** (no outliers).
-- **Median Imputation**: Use for numerical columns with **Skewed Data / Outliers**.
-- **Mode Imputation**: Use for **Categorical Columns**.
+##### Strategy B: Simple Statistical Imputation
+- **Mean Imputation**: Fill missing numerical values with column **Mean**. *Best for Normally Distributed data without outliers*.
+- **Median Imputation**: Fill missing numerical values with column **Median**. *Best for Skewed data or features with Outliers*.
+- **Mode Imputation**: Fill missing categorical values with the **Most Frequent Class (Mode)**.
 
 ```python
-# Numerical Imputation (Median for Skewed data)
-median_age = df['Age'].median()
-df['Age'].fillna(median_age, inplace=True)
+# 1. Median Imputation for Numerical Column
+median_income = df['Income'].median()
+df['Income'].fillna(median_income, inplace=True)
 
-# Categorical Imputation (Mode)
-mode_gender = df['Gender'].mode()[0]
-df['Gender'].fillna(mode_gender, inplace=True)
+# 2. Mode Imputation for Categorical Column
+mode_city = df['City'].mode()[0]
+df['City'].fillna(mode_city, inplace=True)
 ```
 
-#### Strategy 3: Advanced Machine Learning Imputation (`KNNImputer`)
-Uses k-Nearest Neighbors to predict missing values based on neighboring rows.
+##### Strategy C: Advanced Machine Learning Imputation (`KNNImputer`)
+Uses $k$-Nearest Neighbors algorithm to predict missing values based on similarity to neighboring rows.
 
 ```python
 from sklearn.impute import KNNImputer
 
 imputer = KNNImputer(n_neighbors=5)
-df_imputed = pd.DataFrame(imputer.fit_transform(df_numeric), columns=df_numeric.columns)
+df[['Age', 'Income']] = imputer.fit_transform(df[['Age', 'Income']])
 ```
 
 ---
 
-## 3.3 Handling Duplicate Data
+### Step 2: Removing Duplicates
 
-Duplicate rows waste computational memory and cause data bias.
+Duplicate rows waste memory, skew statistical distributions, and cause model overfitting.
 
 ```python
-# Check count of duplicate rows
-print("Duplicate Rows Count:", df.duplicated().sum())
+# 1. Check total number of duplicate rows
+print("Duplicate rows count:", df.duplicated().sum())
 
-# Drop Duplicate Rows
-df.drop_duplicates(inplace=True)
+# 2. View actual duplicate rows
+print(df[df.duplicated()])
+
+# 3. Drop duplicate rows (Keep first occurrence)
+df.drop_duplicates(keep='first', inplace=True)
+print("Shape after removing duplicates:", df.shape)
 ```
 
 ---
 
-## 3.4 Outlier Detection & Treatment
+### Step 3: Fixing Data Types
 
-Outliers can distort algorithms like Linear Regression, Logistic Regression, and K-Means.
-
-### Outlier Treatment Methods:
-
-#### Method 1: Trimming / Dropping
-Remove rows containing extreme outliers.
-
-#### Method 2: Capping / Winsorization (IQR Method)
-Cap extreme values at upper and lower boundary thresholds.
+Raw datasets often import numbers as strings or dates as generic objects. Machine Learning models require appropriate data types.
 
 ```python
-# Capping using IQR
+# 1. Convert Object/String to Numeric (Coerce errors to NaN if invalid text exists)
+df['Salary'] = pd.to_numeric(df['Salary'], errors='coerce')
+
+# 2. Convert String to Datetime
+df['Transaction_Date'] = pd.to_datetime(df['Transaction_Date'], format='%Y-%m-%d')
+
+# 3. Cast Float to Integer
+df['Age'] = df['Age'].astype('int64')
+
+# 4. Convert High-Cardinality String to Category (Saves Memory)
+df['State'] = df['State'].astype('category')
+```
+
+---
+
+### Step 4: Handling Inconsistent Categories & Typos
+
+Human data entry leads to inconsistent text variations (e.g., `'Male'`, `'male'`, `'M'`, `' Male  '`).
+
+```python
+# 1. Strip leading and trailing whitespace
+df['Gender'] = df['Gender'].astype(str).str.strip()
+
+# 2. Convert all text to lower/title case for uniformity
+df['Gender'] = df['Gender'].str.lower()
+
+# 3. Replace inconsistent spelling variations with unified labels
+gender_mapping = {
+    'm': 'male',
+    'male': 'male',
+    'f': 'female',
+    'femal': 'female',
+    'female': 'female'
+}
+df['Gender'] = df['Gender'].map(gender_mapping)
+
+print("Cleaned Category Distribution:")
+print(df['Gender'].value_counts())
+```
+
+---
+
+### Step 5: Detecting and Handling Outliers
+
+Outliers are extreme data points that deviate significantly from the rest of the observations.
+
+#### Detection Method 1: Interquartile Range (IQR Method)
+$$\text{IQR} = Q_3 - Q_1$$
+$$\text{Lower Bound} = Q_1 - 1.5 \times \text{IQR}$$
+$$\text{Upper Bound} = Q_3 + 1.5 \times \text{IQR}$$
+
+```python
+# Calculate Q1, Q3, and IQR
 Q1 = df['Income'].quantile(0.25)
 Q3 = df['Income'].quantile(0.75)
 IQR = Q3 - Q1
 
-lower_limit = Q1 - 1.5 * IQR
-upper_limit = Q3 + 1.5 * IQR
+lower_bound = Q1 - 1.5 * IQR
+upper_bound = Q3 + 1.5 * IQR
 
-# Cap values outside boundaries
-df['Income'] = np.where(df['Income'] > upper_limit, upper_limit, df['Income'])
-df['Income'] = np.where(df['Income'] < lower_limit, lower_limit, df['Income'])
+outliers = df[(df['Income'] < lower_bound) | (df['Income'] > upper_bound)]
+print(f"Total IQR Outliers Detected: {len(outliers)}")
 ```
 
-#### Method 3: Log Transformation
-Compresses large outlier values into smaller ranges.
+#### Detection Method 2: Z-Score Method (For Normally Distributed Data)
+$$Z = \frac{X - \mu}{\sigma}$$
+Any data point with $|Z| > 3$ is considered an outlier (beyond $99.7\%$ of Gaussian distribution).
 
 ```python
-df['Income_Log'] = np.log1p(df['Income'])
+from scipy import stats
+
+z_scores = np.abs(stats.zscore(df['Height']))
+outliers_z = df[z_scores > 3]
+print(f"Z-Score Outliers Detected: {len(outliers_z)}")
+```
+
+#### Strategies to Handle Outliers:
+
+1. **Trimming / Dropping**: Remove outlier rows if they are data errors.
+2. **Capping / Winsorization**: Cap extreme values at lower/upper thresholds so data points are retained without distorting the model.
+
+```python
+# Capping using IQR boundaries
+df['Income_Capped'] = np.where(df['Income'] > upper_bound, upper_bound,
+                       np.where(df['Income'] < lower_bound, lower_bound, df['Income']))
 ```
 
 ---
 
-## 3.5 Handling Inconsistent & Corrupted Data
+### Step 6: Fixing Logic or Domain Errors
 
-Raw datasets often have typos, leading/trailing whitespace, inconsistent capitalizations, or wrong data types.
+Domain errors occur when values are mathematically or logically impossible in the real world.
+
+- **Examples**:
+  - `Age = -5` or `Height = 0`
+  - `Test_Score = 150%` (when max is 100)
+  - `End_Date < Start_Date`
 
 ```python
-# 1. Strip Whitespace and Convert String to Lowercase
-df['City'] = df['City'].str.strip().str.lower()
+# 1. Fix impossible negative values (Replace with NaN or cap at min valid value)
+df.loc[df['Age'] <= 0, 'Age'] = np.nan
 
-# 2. Fix Incorrect / Inconsistent Categorical Labels
-df['Gender'] = df['Gender'].replace({'M': 'Male', 'F': 'Female', 'femal': 'Female'})
+# 2. Fix range boundary violations (Score capped between 0 and 100)
+df['Score'] = df['Score'].clip(lower=0, upper=100)
 
-# 3. Convert Data Types (.astype)
-df['Age'] = df['Age'].astype(int)
-df['Joining_Date'] = pd.to_datetime(df['Joining_Date'])
+# 3. Fix Logical Date Ordering
+invalid_dates = df[df['End_Date'] < df['Start_Date']]
+print(f"Found {len(invalid_dates)} rows where End Date is before Start Date!")
+
+# Drop invalid logical rows
+df = df[df['End_Date'] >= df['Start_Date']]
 ```
 
 ---
@@ -574,33 +729,134 @@ df['Joining_Date'] = pd.to_datetime(df['Joining_Date'])
 
 ## 4.1 What is Data Preprocessing?
 
-**Data Preprocessing** transforms clean raw data into an optimized, mathematically consistent format ready for Machine Learning model training.
-
-Key Preprocessing Tasks:
-1. **Feature Scaling & Normalization**
-2. **Encoding Categorical Data**
-3. **Train-Test Splitting**
+**Data Preprocessing** transforms clean, error-free raw data into an optimized, mathematically structured numerical representation suitable for training Machine Learning models.
 
 ---
 
-## 4.2 Feature Scaling & Normalization
-
-Machine Learning models based on distance metrics (KNN, SVM, K-Means, Gradient Descent models like Linear/Logistic Regression) perform poorly when numerical features have wildly different scales (e.g., `Age` range 0–100 vs `Salary` range 10,000–500,000).
+## 4.2 Core Data Preprocessing Steps
 
 ```
-Without Scaling: Salary (50,000) completely dominates Age (25) in distance math!
-With Scaling   : Both Age and Salary are brought to comparable numerical scales.
+Step 1: Encoding Categorical Variables (One-Hot, Ordinal, Label, Target)
+   │
+Step 2: Feature Transformation (Log, Square Root, Box-Cox, Yeo-Johnson)
+   │
+Step 3: Feature Scaling & Normalization (StandardScaler, MinMaxScaler, RobustScaler)
+   │
+Step 4: Train-Test Split & Preventing Data Leakage
 ```
 
 ---
 
-### Scaling Techniques Comparison
+### Step 1: Encoding Categorical Variables
+
+Machine Learning models compute algebraic matrices ($Y = XW + b$). They cannot process raw text strings directly.
+
+#### A. One-Hot Encoding (For Nominal Features with No Natural Rank)
+Creates a new binary column (`0` or `1`) for every unique category.
+
+```
+Original: Color         One-Hot Encoded:
+| Color |            | Color_Red | Color_Blue | Color_Green |
+| Red   |    --->    |     1     |     0      |      0      |
+| Blue  |            |     0     |     1      |      0      |
+| Green |            |     0     |     0      |      1      |
+```
+
+> ⚠️ **The Dummy Variable Trap**:
+> Including all $k$ dummy columns introduces perfect multicollinearity ($Color\_Green = 1 - Color\_Red - Color\_Blue$). Always use `drop='first'` to keep $k-1$ columns for linear models!
+
+```python
+# Option 1: Pandas get_dummies
+df_encoded = pd.get_dummies(df, columns=['Color'], drop_first=True)
+
+# Option 2: Scikit-Learn OneHotEncoder
+from sklearn.preprocessing import OneHotEncoder
+
+ohe = OneHotEncoder(drop='first', sparse_output=False)
+encoded_array = ohe.fit_transform(df[['Color']])
+```
+
+#### B. Ordinal Encoding (For Ordinal Features with Natural Ranking)
+Assigns ordered integer numbers ($0, 1, 2, 3$) reflecting natural category rank (e.g., `High School` < `Bachelors` < `Masters` < `PhD`).
+
+```python
+from sklearn.preprocessing import OrdinalEncoder
+
+education_order = [['High School', 'Bachelors', 'Masters', 'PhD']]
+ordinal_enc = OrdinalEncoder(categories=education_order)
+
+df['Education_Encoded'] = ordinal_enc.fit_transform(df[['Education_Level']])
+```
+
+#### C. Label Encoding (For Target Labels $y$ ONLY)
+Converts target classification labels into integers ($0, 1, 2$).
+
+```python
+from sklearn.preprocessing import LabelEncoder
+
+le = LabelEncoder()
+y_encoded = le.fit_transform(y_raw)
+```
+
+---
+
+### Step 2: Feature Transformation
+
+Feature transformation changes the mathematical shape of feature distributions to align with linear model assumptions (Gaussian Normal Distribution).
+
+```
+   Right-Skewed Distribution           Transformed Gaussian Curve
+       |*                                      |   *   
+       |* *                                  | * * * 
+       |* * * *                            |* * * * *
+       +------------------->               +------------------->
+```
+
+#### 1. Log Transformation ($\log(x + 1)$)
+Compresses extreme right-skewed numerical tails (e.g., `Income`, `House_Price`, `Revenue`).
+
+```python
+df['Income_Log'] = np.log1p(df['Income'])  # log1p computes log(1 + x) to handle 0 values safely
+```
+
+#### 2. Square Root Transformation ($\sqrt{x}$)
+Weaker transformation than Log; used for moderately right-skewed count data.
+
+```python
+df['Count_Sqrt'] = np.sqrt(df['Transaction_Count'])
+```
+
+#### 3. Power Transformations (Box-Cox & Yeo-Johnson)
+Automatically finds the optimal power parameter $\lambda$ to transform skewed features into bell curves.
+- **Box-Cox**: Requires strictly strictly positive values ($x > 0$).
+- **Yeo-Johnson**: Works on both positive and negative values ($x \in \mathbb{R}$).
+
+```python
+from sklearn.preprocessing import PowerTransformer
+
+# Yeo-Johnson Transformer
+pt = PowerTransformer(method='yeo-johnson')
+df['Income_Transformed'] = pt.fit_transform(df[['Income']])
+```
+
+---
+
+### Step 3: Feature Scaling & Normalization
+
+Distance-based algorithms (KNN, K-Means, SVM) and Gradient Descent optimization models (Linear/Logistic Regression, Neural Networks) are sensitive to feature scales. If `Salary` ranges from $10,000$ to $500,000$ and `Age` ranges from $18$ to $65$, `Salary` will dominate distance formulas!
+
+```
+Without Scaling: Distance = sqrt((Salary2 - Salary1)^2 + (Age2 - Age1)^2)
+                 Salary differences drown out Age completely!
+```
+
+---
+
+#### Comparison of Scaling Methods:
 
 #### 1. Standardization (`StandardScaler`)
-Transforms features so they have a **Mean ($\mu$) of 0** and **Standard Deviation ($\sigma$) of 1**.
+Scales feature to have a **Mean ($\mu$) of 0** and **Standard Deviation ($\sigma$) of 1**.
 $$Z = \frac{X - \mu}{\sigma}$$
-
-- **When to use**: Standard scaling is best for algorithms assuming normal distribution (Linear Regression, Logistic Regression, SVM, KNN, PCA).
 
 ```python
 from sklearn.preprocessing import StandardScaler
@@ -610,98 +866,45 @@ X_scaled = scaler.fit_transform(X[['Age', 'Salary']])
 ```
 
 #### 2. Min-Max Normalization (`MinMaxScaler`)
-Scales features strictly within a bounded range, typically **[0, 1]**.
+Rescales features strictly into a bounded range, typically **[0, 1]**.
 $$X_{norm} = \frac{X - X_{min}}{X_{max} - X_{min}}$$
-
-- **When to use**: When data does not follow Gaussian distribution, or for Neural Networks & Computer Vision images (pixel values 0–255 scaled to 0–1).
 
 ```python
 from sklearn.preprocessing import MinMaxScaler
 
-minmax_scaler = MinMaxScaler()
-X_minmax = minmax_scaler.fit_transform(X[['Age', 'Salary']])
+minmax = MinMaxScaler()
+X_minmax = minmax.fit_transform(X[['Age', 'Salary']])
 ```
 
 #### 3. Robust Scaling (`RobustScaler`)
-Scales data using the **Median** and **Interquartile Range (IQR)**.
-$$\text{Scaled} = \frac{X - \text{Median}}{\text{IQR}}$$
-
-- **When to use**: When dataset contains significant **outliers** that cannot be deleted.
+Scales using **Median ($Q_2$)** and **Interquartile Range ($\text{IQR} = Q_3 - Q_1$)**.
+$$\text{Scaled} = \frac{X - Q_2}{Q_3 - Q_1}$$
+*Best for features containing unavoidable outliers!*
 
 ```python
 from sklearn.preprocessing import RobustScaler
 
-robust_scaler = RobustScaler()
-X_robust = robust_scaler.fit_transform(X[['Age', 'Salary']])
+robust = RobustScaler()
+X_robust = robust.fit_transform(X[['Age', 'Salary']])
 ```
 
 ---
 
-### Scaler Selection Guide
+#### 💡 Scaler Decision Guide Table for Students:
 
-| Feature / Algorithm | Preferred Scaling Method |
-| :--- | :--- |
-| **Linear / Logistic Regression, SVM** | `StandardScaler` |
-| **K-Means, KNN** | `StandardScaler` or `MinMaxScaler` |
-| **Neural Networks, Image Processing** | `MinMaxScaler` (0 to 1) |
-| **Data with heavy Outliers** | `RobustScaler` |
-| **Tree-based Models (Decision Trees, Random Forests, XGBoost)** | **No Scaling Required!** |
-
----
-
-## 4.3 Encoding Categorical Data
-
-Machine Learning algorithms operate on numbers, not text. Categorical variables must be converted into numbers.
-
-Categorical Data types:
-- **Nominal Data**: Categories with **no order** (e.g., Color: `Red`, `Blue`, `Green`; Country: `India`, `USA`, `UK`).
-- **Ordinal Data**: Categories with an **explicit rank or order** (e.g., Education: `High School` < `Bachelors` < `Masters` < `PhD`; Rating: `Low` < `Medium` < `High`).
+| Algorithm Type | Requires Feature Scaling? | Preferred Scaler |
+| :--- | :--- | :--- |
+| **Linear / Logistic Regression, SVM** | ✅ **YES** | `StandardScaler` |
+| **K-Nearest Neighbors (KNN), K-Means** | ✅ **YES** | `StandardScaler` or `MinMaxScaler` |
+| **Neural Networks, Image Pixel Processing** | ✅ **YES** | `MinMaxScaler` (Bounded [0, 1]) |
+| **Datasets with Extreme Outliers** | ✅ **YES** | `RobustScaler` |
+| **Decision Trees, Random Forest, XGBoost** | ❌ **NO** | Scale Invariant (Tree splits don't care!) |
 
 ---
 
-### Encoding Methods:
+### Step 4: Train-Test Split & Preventing Data Leakage
 
-#### Method 1: One-Hot Encoding (For Nominal Data)
-Creates a new binary dummy column (0 or 1) for each unique category.
-
-```
-Original Column: Color          One-Hot Encoded:
-| Color |                     | Color_Red | Color_Blue | Color_Green |
-| Red   |         --->        |     1     |     0      |      0      |
-| Blue  |                     |     0     |     1      |      0      |
-| Green |                     |     0     |     0      |      1      |
-```
-
-```python
-# Using Pandas get_dummies
-df_encoded = pd.get_dummies(df, columns=['Color'], drop_first=True)
-
-# Using Scikit-Learn OneHotEncoder
-from sklearn.preprocessing import OneHotEncoder
-
-ohe = OneHotEncoder(drop='first', sparse_output=False)
-encoded_array = ohe.fit_transform(df[['Color']])
-```
-> **Note**: `drop_first=True` avoids the **Dummy Variable Trap** (Multicollinearity).
-
-#### Method 2: Label / Ordinal Encoding (For Ordinal Data)
-Assigns sequential integers based on natural rank order.
-
-```python
-from sklearn.preprocessing import OrdinalEncoder
-
-# Specify explicit ranking order
-education_order = [['High School', 'Bachelors', 'Masters', 'PhD']]
-ordinal_enc = OrdinalEncoder(categories=education_order)
-
-df['Education_Encoded'] = ordinal_enc.fit_transform(df[['Education_Level']])
-```
-
----
-
-## 4.4 Train-Test Split & Preventing Data Leakage
-
-To evaluate model performance accurately on unseen data, split dataset into **Training Set (80%)** and **Testing Set (20%)**.
+To evaluate model performance realistically, we split data into **Training Set (80%)** and **Testing Set (20%)**.
 
 ```
 +-------------------------------------------------------+
@@ -718,17 +921,22 @@ from sklearn.model_selection import train_test_split
 X = df.drop(columns=['Target'])
 y = df['Target']
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.20, random_state=42, stratify=y if y.nunique() < 10 else None
+)
 ```
 
-> ⚠️ **CRITICAL RULE to Avoid Data Leakage**:
-> Always **fit** scalers/encoders only on `X_train`, then **transform** both `X_train` and `X_test`. Never fit on the full dataset!
+> ⚠️ **CRITICAL RULE - Preventing Data Leakage**:
+> **Data Leakage** occurs when information from the test dataset leaks into the training pipeline.
+> - **WRONG**: `scaler.fit_transform(X)` on full dataset before splitting. (Leaks test mean/std!)
+> - **RIGHT**: `scaler.fit_transform(X_train)` on Train set, then `scaler.transform(X_test)` on Test set!
 
 ```python
-# CORRECT WAY:
+# CORRECT WAY TO SCALE WITHOUT LEAKAGE
 scaler = StandardScaler()
-X_train_scaled = scaler.fit_transform(X_train)  # Fit and Transform on Train
-X_test_scaled = scaler.transform(X_test)        # Transform ONLY on Test
+
+X_train_scaled = scaler.fit_transform(X_train)  # FIT and TRANSFORM on Train ONLY
+X_test_scaled = scaler.transform(X_test)        # TRANSFORM ONLY on Test!
 ```
 
 ---
@@ -738,54 +946,22 @@ X_test_scaled = scaler.transform(X_test)        # Transform ONLY on Test
 
 ## 5.1 What is Feature Engineering?
 
-**Feature Engineering** is the process of using domain knowledge to transform raw data attributes into **new, meaningful input features** that improve the performance, accuracy, and interpretability of Machine Learning algorithms.
+**Feature Engineering** is the art and science of leveraging domain knowledge to transform raw variables into **new, more informative input features** that enhance the predictive power of Machine Learning models.
 
-> **Famous Data Science Quote**: *"Coming up with features is complicated, time-consuming, requires domain knowledge. Applied machine learning is basically feature engineering."* — Prof. Andrew Ng
-
----
-
-## 5.2 Why Feature Engineering is Essential
-
-1. **Improves Model Accuracy**: Smart features often boost model performance more than tuning complex hyper-parameters.
-2. **Simplifies Model Complexity**: Enables simpler linear algorithms to learn complex nonlinear patterns.
-3. **Exposes Hidden Signals**: Transforms raw dates, strings, or timestamps into actionable signals.
+> *"Coming up with features is complicated, time-consuming, requires domain knowledge. Applied machine learning is basically feature engineering."* — Prof. Andrew Ng
 
 ---
 
-## 5.3 Feature Transformation Techniques
+## 5.2 Key Feature Engineering Techniques
 
-Used to transform feature distributions to conform to linear assumptions or normalize skewness.
+### 1. Datetime Feature Extraction & Cyclical Encoding
 
-### 1. Log Transformation
-Used for right-skewed data (e.g., Income, Revenue, House Prices). Compresses long right tails into normal curves.
-$$X_{log} = \log(X + 1)$$
-
-```python
-df['Income_Log'] = np.log1p(df['Income'])
-```
-
-### 2. Polynomial Features
-Creates interaction terms and higher-degree terms ($X_1^2, X_2^2, X_1 X_2$) to capture non-linear relationships.
-
-```python
-from sklearn.preprocessing import PolynomialFeatures
-
-poly = PolynomialFeatures(degree=2, include_bias=False)
-X_poly = poly.fit_transform(X[['Feature1', 'Feature2']])
-```
-
----
-
-## 5.4 Feature Creation & Domain Knowledge Extraction
-
-Creating new domain-specific variables from raw data attributes.
-
-### A. Date & Time Feature Extraction
-A raw timestamp like `"2026-08-11 17:24:00"` cannot be used directly by ML. We extract individual features:
+A raw timestamp string like `"2026-08-12 17:35:00"` cannot be processed directly by algorithms. We extract granular components:
 
 ```python
 df['Date'] = pd.to_datetime(df['Timestamp'])
 
+# Standard DateTime Components
 df['Year'] = df['Date'].dt.year
 df['Month'] = df['Date'].dt.month
 df['Day'] = df['Date'].dt.day
@@ -794,35 +970,82 @@ df['Is_Weekend'] = df['DayOfWeek'].isin([5, 6]).astype(int)
 df['Hour'] = df['Date'].dt.hour
 ```
 
-### B. Domain Ratios & Combinations
-Creating intuitive ratios from existing columns:
+#### Cyclical Sine/Cosine Encoding (For Hours/Months)
+Hours wrap around from $23 \longrightarrow 0$. Numerical values $23$ and $0$ seem far apart to ML, but they are only 1 hour apart! We transform cyclical time into 2D Sine/Cosine coordinates:
+$$x_{sin} = \sin\left(\frac{2\pi \cdot t}{T}\right), \quad x_{cos} = \cos\left(\frac{2\pi \cdot t}{T}\right)$$
 
 ```python
-# 1. Total Family Income in Loan Dataset
+# Cyclical Hour Encoding (T = 24)
+df['Hour_Sin'] = np.sin(2 * np.pi * df['Hour'] / 24)
+df['Hour_Cos'] = np.cos(2 * np.pi * df['Hour'] / 24)
+```
+
+---
+
+### 2. Domain Ratios & Combinations
+
+Combining two or more columns into a meaningful business metric:
+
+```python
+# 1. Total Income in Loan Prediction
 df['Total_Income'] = df['ApplicantIncome'] + df['CoapplicantIncome']
 
 # 2. Debt-to-Income Ratio
 df['Debt_Income_Ratio'] = df['Total_Debt'] / (df['Total_Income'] + 1)
 
-# 3. Price per Square Foot in Housing Dataset
+# 3. Price per Square Foot in Real Estate
 df['Price_Per_SqFt'] = df['House_Price'] / df['Total_SqFt']
+
+# 4. Body Mass Index (BMI) in Healthcare
+df['BMI'] = df['Weight_kg'] / ((df['Height_cm'] / 100) ** 2)
 ```
 
 ---
 
-## 5.5 Feature Discretization / Binning
+### 3. Text Feature Extraction
 
-Binning converts continuous numerical numbers into categorical intervals (bins).
-
-- **Fixed-Width Binning (`pd.cut`)**: Bins based on explicit numerical boundaries.
-- **Quantile Binning (`pd.qcut`)**: Bins based on percentiles (equal count in each bin).
+Extracting numerical metadata from raw text columns (e.g., customer reviews, product descriptions):
 
 ```python
-# Binning Age into Categories
-bins = [0, 18, 35, 60, 100]
-labels = ['Child', 'Young Adult', 'Middle Aged', 'Senior']
+# 1. Character Length of Text
+df['Review_Char_Count'] = df['Review_Text'].astype(str).apply(len)
+
+# 2. Word Count
+df['Review_Word_Count'] = df['Review_Text'].astype(str).apply(lambda x: len(x.split()))
+
+# 3. Presence of Special Characters (e.g., Exclamation marks indicating emotion)
+df['Exclamation_Count'] = df['Review_Text'].astype(str).apply(lambda x: x.count('!'))
+```
+
+---
+
+### 4. Feature Discretization / Binning
+
+Binning converts continuous numerical values into categorical intervals/ranges.
+
+- **Fixed-Width Binning (`pd.cut`)**: Equal distance intervals.
+- **Quantile Binning (`pd.qcut`)**: Equal sample frequency intervals per bin.
+
+```python
+# Binning Age into Discrete Life Stages
+bins = [0, 12, 19, 35, 60, 100]
+labels = ['Child', 'Teens', 'Young Adult', 'Middle Aged', 'Senior']
 
 df['Age_Group'] = pd.cut(df['Age'], bins=bins, labels=labels)
+```
+
+---
+
+### 5. Group Aggregations (`groupby().transform()`)
+
+Creating statistical summary features relative to a customer's demographic or category group:
+
+```python
+# 1. Average customer spending by City
+df['City_Avg_Spend'] = df.groupby('City')['Total_Spend'].transform('mean')
+
+# 2. Difference between customer spend and their city's average spend
+df['Spend_Diff_From_City_Avg'] = df['Total_Spend'] - df['City_Avg_Spend']
 ```
 
 ---
@@ -832,26 +1055,15 @@ df['Age_Group'] = pd.cut(df['Age'], bins=bins, labels=labels)
 
 ## 6.1 What is Feature Selection?
 
-**Feature Selection** is the process of selecting a subset of the most relevant features (columns) for use in model construction, while dropping redundant, noisy, or irrelevant features.
+**Feature Selection** is the process of selecting a subset of the most relevant and informative features to use in model building, while dropping noisy, uninformative, or redundant columns.
 
-> **Feature Selection vs Dimensionality Reduction**:
-> - **Feature Selection**: Keeps a subset of original features without altering their meaning (e.g., selecting 10 columns out of 50).
-> - **Dimensionality Reduction (PCA)**: Combines/transforms features into brand new synthesized components.
-
----
-
-## 6.2 Why Feature Selection is Important?
-
-1. **Avoids Curse of Dimensionality**: Too many features lead to sparse data matrices and overfitting.
-2. **Reduces Training Time**: Fewer features mean faster model training and inference speed.
-3. **Enhances Model Interpretability**: Easier to explain model predictions to stakeholders.
-4. **Prevents Overfitting**: Removing noisy features improves generalization on unseen test data.
+> **Feature Selection vs Dimensionality Reduction (PCA)**:
+> - **Feature Selection**: Keeps a subset of the **original features intact** (preserves interpretability).
+> - **Dimensionality Reduction**: Combines features into **brand new synthesized components** (loses feature names).
 
 ---
 
-## 6.3 Categories of Feature Selection Methods
-
-There are **3 primary methods** for Feature Selection:
+## 6.2 Primary Feature Selection Methods
 
 ```
                       +-----------------------------+
@@ -868,34 +1080,34 @@ There are **3 primary methods** for Feature Selection:
 
 ---
 
-### 1. Filter Methods (Fast & Statistical)
+### Method 1: Filter Methods (Fast & Model-Independent)
 
-Filter methods evaluate the statistical relationship between each input feature and the target variable **independent of any ML model**.
+Filter methods evaluate the statistical connection between each feature and target variable **without training ML models**.
 
-#### A. Variance Threshold
-Removes features with low variance (features that stay almost constant across all rows).
+#### A. Variance Thresholding
+Removes constant or near-constant features (features with variance lower than a threshold).
 
 ```python
 from sklearn.feature_selection import VarianceThreshold
 
-# Remove columns with variance lower than 0.1
-selector = VarianceThreshold(threshold=0.1)
+# Remove columns where >99% of rows have the exact same value
+selector = VarianceThreshold(threshold=0.01)
 X_high_var = selector.fit_transform(X)
 ```
 
-#### B. Correlation Matrix (Removing Multicollinearity)
-If two independent features are 95%+ correlated, remove one of them to prevent redundancy.
+#### B. Correlation Matrix & Multicollinearity (VIF)
+If two input features are >85% correlated, drop one to avoid redundancy.
 
 ```python
 corr_matrix = df.corr().abs()
 upper_tri = corr_matrix.where(np.triu(np.ones(corr_matrix.shape), k=1).astype(bool))
 
-# Drop features with correlation > 0.85
+# Identify features with correlation higher than 0.85
 to_drop = [column for column in upper_tri.columns if any(upper_tri[column] > 0.85)]
 df_selected = df.drop(columns=to_drop)
 ```
 
-#### C. Statistical Tests ($\chi^2$, ANOVA, Mutual Information)
+#### C. Statistical Scoring Tests
 - **Chi-Square ($\chi^2$)**: For Categorical Feature vs Categorical Target.
 - **ANOVA F-Test**: For Numerical Feature vs Categorical Target.
 - **Mutual Information**: Measures non-linear dependency between features and target.
@@ -903,25 +1115,25 @@ df_selected = df.drop(columns=to_drop)
 ```python
 from sklearn.feature_selection import SelectKBest, f_classif, mutual_info_classif
 
-# Select top 5 features using ANOVA F-test
+# Select top 5 numerical features using ANOVA F-test
 selector = SelectKBest(score_func=f_classif, k=5)
-X_top5 = selector.fit_transform(X, y)
+X_top5 = selector.fit_transform(X_train, y_train)
 ```
 
 ---
 
-### 2. Wrapper Methods (Search & Iterate)
+### Method 2: Wrapper Methods (Iterative Model Evaluation)
 
-Wrapper methods use an ML model as a evaluator to search for the best-performing subset of features. They test combinations iteratively.
+Wrapper methods evaluate combinations of features by training ML models iteratively and assessing performance scores.
 
-#### A. Forward Feature Selection
-Starts with 0 features and adds the best-performing feature one by one until performance stops improving.
+#### A. Forward Selection
+Starts with 0 features and adds the best performing feature one by one.
 
-#### B. Backward Feature Elimination
-Starts with all features and removes the least significant feature step-by-step.
+#### B. Backward Elimination
+Starts with all features and iteratively removes the weakest feature.
 
 #### C. Recursive Feature Elimination (RFE)
-Iteratively fits an estimator and removes features with the lowest weights/importance score.
+Fits an estimator and recursively prunes features with the lowest weights/importance.
 
 ```python
 from sklearn.feature_selection import RFE
@@ -931,32 +1143,30 @@ model = RandomForestClassifier()
 rfe = RFE(estimator=model, n_features_to_select=5)
 rfe.fit(X_train, y_train)
 
-# View selected features boolean mask
-print("Selected Features Mask:", rfe.support_)
-print("Feature Ranking:", rfe.ranking_)
+# View mask of selected features
+selected_features = X.columns[rfe.support_]
+print("RFE Selected Features:", selected_features)
 ```
 
 ---
 
-### 3. Embedded Methods (Built-in Regularization / Importance)
+### Method 3: Embedded Methods (Built-in Algorithm Selection)
 
-Embedded methods perform feature selection automatically during the model training process.
+Embedded methods perform feature selection automatically during model training.
 
 #### A. Lasso Regression (L1 Regularization)
-Lasso adds an L1 penalty to the loss function that shrinks non-essential feature coefficients to **exact zero**, effectively dropping them.
-
-$$\text{Loss} = \text{MSE} + \lambda \sum |\beta_j|$$
+Lasso adds an L1 penalty term ($\lambda \sum |\beta_j|$) to the loss function that shrinks uninformative feature coefficients to **exact zero**, effectively dropping them!
 
 ```python
 from sklearn.linear_model import LassoCV
 
 lasso = LassoCV(cv=5).fit(X_train, y_train)
-important_features = X.columns[lasso.coef_ != 0]
-print("Lasso Selected Features:", important_features)
+lasso_features = X.columns[lasso.coef_ != 0]
+print("Lasso Selected Features:", lasso_features)
 ```
 
 #### B. Tree-Based Feature Importances
-Decision Trees, Random Forests, and XGBoost naturally calculate feature importance based on mean decrease in impurity (Gini Impurity / Entropy).
+Tree models calculate feature importance based on Gini impurity reduction across all splits.
 
 ```python
 from sklearn.ensemble import RandomForestClassifier
@@ -964,29 +1174,34 @@ from sklearn.ensemble import RandomForestClassifier
 rf = RandomForestClassifier().fit(X_train, y_train)
 importances = pd.Series(rf.feature_importances_, index=X.columns)
 
-# Plot top 10 important features
+# Plot Top 10 Features
+plt.figure(figsize=(8, 5))
 importances.nlargest(10).plot(kind='barh', color='teal')
 plt.title("Random Forest Top 10 Feature Importances")
+plt.xlabel("Gini Importance Score")
 plt.show()
 ```
 
 ---
 
-## 📌 Feature Selection Method Decision Matrix
+## 📌 Feature Selection Decision Matrix
 
-| Method | Speed | Model Dependent? | Detects Interactions? | Best For |
+| Method | Speed | Model-Dependent? | Captures Feature Interactions? | Best Recommended Use Case |
 | :--- | :--- | :--- | :--- | :--- |
-| **Filter Methods** | Very Fast | ❌ No | ❌ No | Initial quick filtering on huge datasets |
-| **Wrapper Methods (RFE)** | Slow | ✅ Yes | ✅ Yes | Small datasets requiring peak accuracy |
-| **Embedded (Lasso/Trees)** | Fast/Medium | ✅ Yes | ✅ Yes | Modern ML pipeline standard practice |
+| **Filter Methods** | ⚡ Very Fast | ❌ No | ❌ No | Initial quick cleanup of massive datasets |
+| **Wrapper Methods (RFE)** | 🐢 Slow | ✅ Yes | ✅ Yes | Small datasets requiring peak accuracy |
+| **Embedded (Lasso / Trees)** | 🚀 Fast | ✅ Yes | ✅ Yes | Industry Standard for production pipelines |
 
 ---
 
 ## 🎓 Summary Checklist for Students
-1. **Understand Problem & ML Type** (Supervised vs Unsupervised).
-2. **Perform EDA** (Understand shapes, distributions, anomalies).
-3. **Clean Data** (Fix missing values, duplicates, outliers).
-4. **Preprocess Data** (Scale numbers, encode categories, split train/test).
-5. **Engineer Features** (Transform skewness, create ratios, bin columns).
-6. **Select Best Features** (Drop redundant/noisy variables).
-7. **Train & Evaluate ML Model!**
+
+When working on any Machine Learning assignment or project, follow this exact workflow:
+
+1. 🔍 **Problem Understanding**: Determine whether the problem is Supervised (Regression vs Classification) or Unsupervised.
+2. 📊 **Exploratory Data Analysis (EDA)**: Inspect shape, inspect head/tail, calculate describe statistics, check value counts, analyze missingness heatmaps, plot distributions (histograms, boxplots), check correlations, and analyze target balance.
+3. 🧹 **Data Cleaning**: Handle missing data (Impute/Drop), remove duplicate rows, convert data types, fix inconsistent category string spellings/typos, detect/cap outliers, and correct logical domain errors.
+4. ⚙️ **Data Preprocessing**: Encode categorical variables (One-Hot/Ordinal), transform skewed distributions, apply feature scaling (`StandardScaler`/`MinMaxScaler`), and split into Train/Test sets safely to avoid data leakage.
+5. 🛠️ **Feature Engineering**: Extract datetime/cyclical features, construct domain ratios, engineer text length features, bin continuous variables, and compute group aggregations.
+6. 🎯 **Feature Selection**: Remove near-zero variance features, drop high multicollinearity features, use RFE or Tree Feature Importances to select the top predictive variables.
+7. 🤖 **Model Training & Evaluation**: Train your ML algorithm and measure metrics (MSE, $R^2$, Accuracy, Precision, Recall, F1-Score, ROC-AUC)!
